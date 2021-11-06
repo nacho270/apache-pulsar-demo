@@ -22,8 +22,9 @@ public class SimpleProducer {
   public void sendSample() throws PulsarClientException {
     for (int i = 0; i < 10; i++) {
       final String message = "my-message-" + i;
-      log.info("Sending msg: {}", message);
-      pulsarProducer.send(message);
+      final String key = "key_" + i % 2;
+      log.info("Sending msg with key: {}, value: {}", key, message);
+      pulsarProducer.newMessage().key(key).value(message).send();
     }
   }
 }

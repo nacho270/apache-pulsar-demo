@@ -47,7 +47,7 @@ public class PulsarConsumerConfig {
         .topic(TOPIC) //
         .subscriptionName(SUBSCRIPTION_NAME) //
         .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
-        .subscriptionType(SubscriptionType.Shared) //
+        .subscriptionType(SubscriptionType.Key_Shared) //
         .receiverQueueSize(10) //
         .subscribe();
   }

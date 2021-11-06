@@ -1,7 +1,5 @@
 package com.nacho.pulsar.demo.consumer;
 
-import java.util.concurrent.CompletableFuture;
-
 import javax.annotation.PostConstruct;
 
 import org.apache.pulsar.client.api.Consumer;
@@ -20,7 +18,7 @@ public class KeySharedListener {
 
   @PostConstruct
   public void startListening() {
-    CompletableFuture.supplyAsync(() -> {
+    new Thread(() -> {
       try {
         log.info("Listening on key-shared topic {} under subscription {}...", pulsarKeySharedConsumer.getTopic(), pulsarKeySharedConsumer.getSubscription());
         while (true) {
@@ -33,8 +31,7 @@ public class KeySharedListener {
       } catch (final Exception e) {
         log.error("", e);
       }
-      return null;
-    });
+    }).start();
   }
 
 }

@@ -20,13 +20,17 @@ public class PulsarConsumerConfig {
    * Cluster specific -> persistent://property/global/namespace/topic
    */
 
-  private static final String TOPIC = "persistent://sample/pulsar/ns1/my-topic";
+  private static final String KEY_SHARED_TOPIC = "persistent://sample/pulsar/ns1/key_shared-topic";
+
+  private static final String SHARED_TOPIC = "persistent://sample/pulsar/ns1/shared-topic";
 
   private static final String PULSAR_URL = "pulsar://localhost:6650";
 
   private static final String PULSAR_ADMIN_URL = "http://localhost:8180";
 
-  private static final String SUBSCRIPTION_NAME = "the-subscription";
+  private static final String KEY_SHARED_SUBSCRIPTION_NAME = "key_shared-subscription";
+
+  private static final String SHARED_SUBSCRIPTION_NAME = "shared-subscription";
 
   @Bean
   PulsarAdmin pulsarAdmin() throws PulsarClientException {
@@ -41,11 +45,23 @@ public class PulsarConsumerConfig {
   }
 
   @Bean
-  Consumer<String> pulsarConsumer(final PulsarClient pulsarClient, final PulsarAdmin pulsarAdmin) throws PulsarClientException, PulsarAdminException {
+  Consumer<String> pulsarSharedConsumer(final PulsarClient pulsarClient) throws PulsarClientException, PulsarAdminException {
     return pulsarClient //
         .newConsumer(Schema.STRING) //
-        .topic(TOPIC) //
-        .subscriptionName(SUBSCRIPTION_NAME) //
+        .topic(SHARED_TOPIC) //
+        .subscriptionName(SHARED_SUBSCRIPTION_NAME) //
+        .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
+        .subscriptionType(SubscriptionType.Shared) //
+        .receiverQueueSize(10) //
+        .subscribe();
+  }
+
+  @Bean
+  Consumer<String> pulsarKeySharedConsumer(final PulsarClient pulsarClient) throws PulsarClientException, PulsarAdminException {
+    return pulsarClient //
+        .newConsumer(Schema.STRING) //
+        .topic(KEY_SHARED_TOPIC) //
+        .subscriptionName(KEY_SHARED_SUBSCRIPTION_NAME) //
         .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
         .subscriptionType(SubscriptionType.Key_Shared) //
         .receiverQueueSize(10) //

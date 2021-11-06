@@ -17,7 +17,9 @@ public class PulsarProducerConfig {
    * Cluster specific -> persistent://property/global/namespace/topic
    */
 
-  private static final String TOPIC = "persistent://sample/pulsar/ns1/my-topic";
+  private static final String KEY_SHARED_TOPIC = "persistent://sample/pulsar/ns1/key_shared-topic";
+
+  private static final String SHARED_TOPIC = "persistent://sample/pulsar/ns1/shared-topic";
 
   private static final String PULSAR_ADMIN_URL = "http://localhost:8180";
 
@@ -36,10 +38,18 @@ public class PulsarProducerConfig {
   }
 
   @Bean
-  Producer<String> pulsarProducer(final PulsarClient pulsarClient) throws PulsarClientException {
+  Producer<String> pulsarKeySharedProducer(final PulsarClient pulsarClient) throws PulsarClientException {
     return pulsarClient //
         .newProducer(Schema.STRING) //
-        .topic(TOPIC) //
+        .topic(KEY_SHARED_TOPIC) //
+        .create();
+  }
+
+  @Bean
+  Producer<String> pulsarSharedProducer(final PulsarClient pulsarClient) throws PulsarClientException {
+    return pulsarClient //
+        .newProducer(Schema.STRING) //
+        .topic(SHARED_TOPIC) //
         .create();
   }
 }

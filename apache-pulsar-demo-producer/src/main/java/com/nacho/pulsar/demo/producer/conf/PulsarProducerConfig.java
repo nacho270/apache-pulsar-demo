@@ -12,9 +12,9 @@ import org.springframework.context.annotation.Configuration;
 public class PulsarProducerConfig {
 
   /*
-   * Global -> persistent://property/cluster/namespace/topic
+   * Global -> persistent://domain/global/namespace/topic
    *
-   * Cluster specific -> persistent://property/global/namespace/topic
+   * Cluster specific -> persistent://domain/tenant/namespace/topic.
    */
 
   private static final String KEY_SHARED_TOPIC = "persistent://sample/pulsar/ns1/key_shared-topic";

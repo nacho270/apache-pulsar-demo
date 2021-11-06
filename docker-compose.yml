@@ -13,6 +13,8 @@ services:
       /bin/bash -c
       "bin/apply-config-from-env.py conf/standalone.conf
       && exec bin/pulsar standalone --advertised-address pulsar"
+      "curl -XPUT localhost:8080/admin/v2/persistent/pulsar/ns1/key_shared-topic"
+      "curl -XPUT localhost:8080/admin/v2/persistent/pulsar/ns1/shared-topic" 
 
   pulsar-dashboard:
     image: apachepulsar/pulsar-dashboard

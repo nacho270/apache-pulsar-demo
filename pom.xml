@@ -1,101 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.6</version>
-        <relativePath/>
-    </parent>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.5.6</version>
+		<relativePath />
+	</parent>
 
-    <groupId>com.nacho.blog</groupId>
-    <artifactId>apache-pulsar-demo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>apache-pulsar-demo</name>
-    <description>apache-pulsar-demo</description>
-    <packaging>pom</packaging>
+	<groupId>com.nacho.blog</groupId>
+	<artifactId>apache-pulsar-demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>apache-pulsar-demo</name>
+	<description>apache-pulsar-demo</description>
+	<packaging>pom</packaging>
 
-    <modules>
-        <module>apache-pulsar-demo-producer</module>
-        <module>apache-pulsar-demo-consumer</module>
-    </modules>
+	<modules>
+		<module>apache-pulsar-demo-producer</module>
+		<module>apache-pulsar-demo-consumer</module>
+	</modules>
 
-    <properties>
-        <java.version>17</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <lombok.version>1.18.22</lombok.version>
-        <pulsar.version>1.20.0-incubating</pulsar.version>
-    </properties>
+	<properties>
+		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<lombok.version>1.18.22</lombok.version>
+		<pulsar.version>2.8.1</pulsar.version>
+	</properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.pulsar</groupId>
-                <artifactId>pulsar-client</artifactId>
-                <version>${pulsar.version}</version>
-            </dependency>
-        </dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.pulsar</groupId>
+				<artifactId>pulsar-client</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
 
-    </dependencyManagement>
+			<dependency>
+				<groupId>org.apache.pulsar</groupId>
+				<artifactId>pulsar-client-admin</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
 
-    <build>
+		</dependencies>
 
-        <pluginManagement>
+	</dependencyManagement>
 
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
-                </plugin>
+	<build>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                        <compilerArguments>
-                            <verbose/>
-                            <Xlint/>
-                        </compilerArguments>
-                        <fork>true</fork>
-                        <verbose>true</verbose>
-                        <source>17</source>
-                        <target>17</target>
-                        <showWarnings>true</showWarnings>
-                        <compilerVersion>17</compilerVersion>
-                        <debug>true</debug>
-                    </configuration>
-                </plugin>
+		<pluginManagement>
 
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.0.0-M5</version>
+				</plugin>
 
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+						</annotationProcessorPaths>
+						<compilerArguments>
+							<verbose />
+							<Xlint />
+						</compilerArguments>
+						<fork>true</fork>
+						<verbose>true</verbose>
+						<source>17</source>
+						<target>17</target>
+						<showWarnings>true</showWarnings>
+						<compilerVersion>17</compilerVersion>
+						<debug>true</debug>
+					</configuration>
+				</plugin>
 
-    </build>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+		</plugins>
+
+	</build>
 </project>

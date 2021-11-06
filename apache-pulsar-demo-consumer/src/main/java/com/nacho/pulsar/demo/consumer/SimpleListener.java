@@ -13,9 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleListener {
 
-  private final Consumer pulsarConsumer;
+  private final Consumer<String> pulsarConsumer;
 
-  public SimpleListener(final Consumer pulsarConsumer) {
+  public SimpleListener(final Consumer<String> pulsarConsumer) {
     this.pulsarConsumer = pulsarConsumer;
   }
 
@@ -23,9 +23,9 @@ public class SimpleListener {
   public void startListening() throws PulsarClientException {
     log.info("Listening on topic {} under subscription {}...", pulsarConsumer.getTopic(), pulsarConsumer.getSubscription());
     while (true) {
-      final Message msg = pulsarConsumer.receive();
+      final Message<String> msg = pulsarConsumer.receive();
 
-      log.info("Received message: " + msg.getData());
+      log.info("Received message: " + msg.getValue());
 
       pulsarConsumer.acknowledge(msg);
     }

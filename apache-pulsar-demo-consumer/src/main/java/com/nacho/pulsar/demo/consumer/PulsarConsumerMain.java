@@ -1,12 +1,12 @@
-package com.nacho.pulsar.demo.producer;
+package com.nacho.pulsar.demo.consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Main {
+public class PulsarConsumerMain {
 
   public static void main(final String[] args) {
-    SpringApplication.run(Main.class, args);
+    SpringApplication.run(PulsarConsumerMain.class, args);
   }
 }

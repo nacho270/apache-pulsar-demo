@@ -24,3 +24,25 @@ services:
       - "9090:80"
     environment:
       - SERVICE_URL=http://pulsar:8080
+      
+#  producer:
+#    image: nacho270/apache-pulsar-demo-producer:latest
+#    ports:
+#       - 7070:7070
+#    depends_on:
+#      - pulsar
+#      
+#  consumer-1:
+#    image: nacho270/apache-pulsar-demo-consumer
+#    ports:
+#       - 8180:8080
+#    depends_on:
+#      - pulsar
+#
+#  consumer-2:
+#    image: nacho270/apache-pulsar-demo-consumer
+#    ports:
+#       - 8280:8080
+#    depends_on:
+#      - pulsar
+#      

@@ -8,6 +8,7 @@ import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,23 +25,20 @@ public class PulsarConsumerConfig {
 
   private static final String SHARED_TOPIC = "persistent://sample/pulsar/ns1/shared-topic";
 
-  private static final String PULSAR_URL = "pulsar://localhost:6650";
-
-  private static final String PULSAR_ADMIN_URL = "http://localhost:8180";
-
   private static final String KEY_SHARED_SUBSCRIPTION_NAME = "key_shared-subscription";
 
   private static final String SHARED_SUBSCRIPTION_NAME = "shared-subscription";
 
+
   @Bean
-  PulsarAdmin pulsarAdmin() throws PulsarClientException {
-    return PulsarAdmin.builder().serviceHttpUrl(PULSAR_ADMIN_URL).build();
+  PulsarAdmin pulsarAdmin(@Value("${pulsar.admin}") String pulsarAdmin) throws PulsarClientException {
+    return PulsarAdmin.builder().serviceHttpUrl(pulsarAdmin).build();
   }
 
   @Bean
-  PulsarClient pulsarClient() throws PulsarClientException {
+  PulsarClient pulsarClient(@Value("${pulsar.url}") String pulsarUrl) throws PulsarClientException {
     return PulsarClient.builder() //
-        .serviceUrl(PULSAR_URL) //
+        .serviceUrl(pulsarUrl) //
         .build();
   }
 

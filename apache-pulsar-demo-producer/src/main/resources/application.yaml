@@ -1,2 +1,6 @@
 server:
    port: 7070
+
+pulsar:
+  url: pulsar://localhost:6650
+  admin: http://localhost:8180

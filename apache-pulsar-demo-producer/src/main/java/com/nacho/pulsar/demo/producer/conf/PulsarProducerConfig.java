@@ -5,6 +5,7 @@ import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Schema;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,20 +22,16 @@ public class PulsarProducerConfig {
 
   private static final String SHARED_TOPIC = "persistent://sample/pulsar/ns1/shared-topic";
 
-  private static final String PULSAR_ADMIN_URL = "http://localhost:8180";
-
-  private static final String PULSAR_URL = "pulsar://localhost:6650";
-
   @Bean
-  PulsarAdmin pulsarAdmin() throws PulsarClientException {
-    return PulsarAdmin.builder().serviceHttpUrl(PULSAR_ADMIN_URL).build();
+  PulsarAdmin pulsarAdmin(@Value("${pulsar.admin}") String pulsarAdmin) throws PulsarClientException {
+    return PulsarAdmin.builder().serviceHttpUrl(pulsarAdmin).build();
   }
 
   @Bean
-  PulsarClient pulsarClient(final PulsarAdmin pulsarAdmin) throws PulsarClientException {
+  PulsarClient pulsarClient(@Value("${pulsar.url}") String pulsarUrl) throws PulsarClientException {
     return PulsarClient.builder() //
-        .serviceUrl(PULSAR_URL) //
-        .build();
+            .serviceUrl(pulsarUrl) //
+            .build();
   }
 
   @Bean

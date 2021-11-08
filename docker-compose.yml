@@ -5,8 +5,8 @@ services:
   pulsar:
     image: apachepulsar/pulsar
     ports:
-      - 8180:8080
-      - 6650:6650
+      - "8180:8080"
+      - "6650:6650"
     environment:
       - BOOKIE_MEM=" -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"
     command: >
@@ -24,25 +24,33 @@ services:
       - "9090:80"
     environment:
       - SERVICE_URL=http://pulsar:8080
-      
-#  producer:
-#    image: nacho270/apache-pulsar-demo-producer:latest
-#    ports:
-#       - 7070:7070
-#    depends_on:
-#      - pulsar
-#      
-#  consumer-1:
-#    image: nacho270/apache-pulsar-demo-consumer
-#    ports:
-#       - 8180:8080
-#    depends_on:
-#      - pulsar
-#
-#  consumer-2:
-#    image: nacho270/apache-pulsar-demo-consumer
-#    ports:
-#       - 8280:8080
-#    depends_on:
-#      - pulsar
-#      
+
+  producer:
+    image: nacho270/apache-pulsar-demo-producer
+    ports:
+      - "7070:7070"
+    depends_on:
+      - pulsar
+    environment:
+      - PULSAR_URL=pulsar://pulsar:6650
+      - PULSAR_ADMIN=pulsar://pulsar:8180
+
+  consumer-1:
+    image: nacho270/apache-pulsar-demo-consumer
+    ports:
+      - "8280:8080"
+    depends_on:
+      - pulsar
+    environment:
+      - PULSAR_URL=pulsar://pulsar:6650
+      - PULSAR_ADMIN=pulsar://pulsar:8180
+
+  consumer-2:
+    image: nacho270/apache-pulsar-demo-consumer
+    ports:
+      - "8380:8080"
+    depends_on:
+      - pulsar
+    environment:
+      - PULSAR_URL=pulsar://pulsar:6650
+      - PULSAR_ADMIN=pulsar://pulsar:8180

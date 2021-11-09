@@ -1,14 +1,7 @@
 package com.nacho.pulsar.demo.consumer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-
-import org.apache.pulsar.client.admin.PulsarAdminException;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Producer;
@@ -20,8 +13,13 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.shade.com.google.common.collect.Maps;
 import org.apache.pulsar.shade.com.google.common.collect.Sets;
 
-import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Slf4j
 @UtilityClass
@@ -32,7 +30,7 @@ class Utils {
     private final Consumer<String> pulsarSharedConsumer;
     private final List<String> consumed = Collections.synchronizedList(new ArrayList<>());
 
-    ExclusiveListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException, PulsarAdminException {
+    ExclusiveListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException {
       pulsarSharedConsumer = consumer(pulsarClient, topic, subscription, SubscriptionType.Exclusive);
     }
 
@@ -63,7 +61,7 @@ class Utils {
     private final Consumer<String> pulsarSharedConsumer;
     private final List<String> consumed = Collections.synchronizedList(new ArrayList<>());
 
-    SharedListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException, PulsarAdminException {
+    SharedListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException {
       pulsarSharedConsumer = consumer(pulsarClient, topic, subscription, SubscriptionType.Shared);
     }
 
@@ -100,7 +98,7 @@ class Utils {
     private final Consumer<String> pulsarKeySharedConsumer;
     private final Map<String, List<String>> consumed = Maps.newConcurrentMap();
 
-    KeySharedListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException, PulsarAdminException {
+    KeySharedListenerStub(final PulsarClient pulsarClient, final String topic, final String subscription) throws PulsarClientException {
       pulsarKeySharedConsumer = consumer(pulsarClient, topic, subscription, SubscriptionType.Key_Shared);
     }
 
@@ -119,10 +117,6 @@ class Utils {
           e.printStackTrace();
         }
       }).start();
-    }
-
-    public void close() throws PulsarClientException {
-      pulsarKeySharedConsumer.close();
     }
 
     public int consumedCount() {
@@ -154,7 +148,7 @@ class Utils {
       }
     }
 
-    public void produceAsync(final int quantity) throws Exception {
+    public void produceAsync(final int quantity) {
       new Thread(() -> {
         try {
           for (int i = 0; i < quantity; i++) {
@@ -188,20 +182,6 @@ class Utils {
         producer.newMessage().key(key).value(message).send();
       }
       return keys;
-    }
-
-    public void produceAsync(final int quantity) throws PulsarClientException {
-      new Thread(() -> {
-        try {
-          for (int i = 0; i < quantity; i++) {
-            final String message = "key-shared-msg-" + i;
-            final String key = "key_" + keyGenerator.apply(i);
-            producer.newMessage().key(key).value(message).send();
-          }
-        } catch (final Exception e) {
-          e.printStackTrace();
-        }
-      }).start();
     }
   }
 

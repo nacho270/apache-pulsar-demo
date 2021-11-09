@@ -206,22 +206,22 @@ class Utils {
   }
 
   private static Consumer<String> consumer(final PulsarClient pulsarClient, final String topic, final String subscription, final SubscriptionType subscriptionType)
-      throws PulsarClientException, PulsarAdminException {
+          throws PulsarClientException {
     return pulsarClient //
-        .newConsumer(Schema.STRING) //
-        .topic(topic) //
-        .subscriptionName(subscription) //
-        .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
-        .subscriptionType(subscriptionType) //
-        .receiverQueueSize(10) //
-        .subscribe();
+            .newConsumer(Schema.STRING) //
+            .topic(topic) //
+            .subscriptionName(subscription) //
+            .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
+            .subscriptionType(subscriptionType) //
+            .receiverQueueSize(10) //
+            .subscribe();
   }
 
   private static Producer<String> producer(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
     return pulsarClient //
-        .newProducer(Schema.STRING) //
-        .topic(topic) //
-        .create();
+            .newProducer(Schema.STRING) //
+            .topic(topic) //
+            .create();
   }
 
   static void sleep(final long millis) throws Exception {

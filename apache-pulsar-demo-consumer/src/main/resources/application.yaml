@@ -1,3 +1,6 @@
+server:
+  port: 6060
+
 pulsar:
   url: pulsar://localhost:6650
-  admin: http://localhost:8180
+  admin: http://localhost:8080

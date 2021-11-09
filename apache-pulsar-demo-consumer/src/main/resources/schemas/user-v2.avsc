@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "name": "UserSchemaV2",
+  "namespace": "com.nacho.pulsar.demo.schema",
+  "fields": [
+    {
+      "name": "id",
+      "type": {
+        "type": "string",
+        "logicalType": "uuid"
+      }
+    },
+    {
+      "name": "userName",
+      "type": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "email",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    }
+  ]
+}

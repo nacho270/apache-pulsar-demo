@@ -1,4 +1,4 @@
-package com.nacho.pulsar.demo.consumer.avro;
+package com.nacho.pulsar.demo.consumer.avro.object;
 
 import com.nacho.pulsar.demo.consumer.Utils;
 import com.nacho.pulsar.demo.schema.UserSchemaV2;
@@ -8,12 +8,12 @@ import org.apache.pulsar.client.api.PulsarClientException;
 
 import java.util.UUID;
 
-public class SimpleAvroProducerV2Stub {
+public class SimpleAvroObjectProducerV2Stub {
 
-  private final Producer<UserSchemaV2> producer;
+  private final Producer<Object> producer;
 
-  public SimpleAvroProducerV2Stub(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
-    this.producer = Utils.avroProducerV2(pulsarClient, topic);
+  public SimpleAvroObjectProducerV2Stub(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
+    this.producer = Utils.objectProducerV2(pulsarClient, topic);
   }
 
   public void produce(String name) throws Exception {

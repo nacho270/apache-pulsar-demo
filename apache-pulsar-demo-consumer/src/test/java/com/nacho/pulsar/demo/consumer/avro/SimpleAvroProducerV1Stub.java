@@ -17,7 +17,7 @@ public class SimpleAvroProducerV1Stub {
   }
 
   public void produce(String name) throws Exception {
-    UserSchema userSchema = UserSchema.newBuilder().setId(UUID.randomUUID()).setUserName(name).build();
+    UserSchema userSchema = UserSchema.newBuilder().setId(UUID.randomUUID().toString()).setUserName(name).build();
     producer.newMessage().value(userSchema).send();
     Utils.sleep(100);
   }

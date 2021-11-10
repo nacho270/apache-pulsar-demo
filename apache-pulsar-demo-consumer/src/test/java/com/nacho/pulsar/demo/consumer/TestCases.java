@@ -3,6 +3,9 @@ package com.nacho.pulsar.demo.consumer;
 import com.nacho.pulsar.demo.consumer.avro.SimpleAvroProducerV1Stub;
 import com.nacho.pulsar.demo.consumer.avro.SimpleAvroProducerV2Stub;
 import com.nacho.pulsar.demo.consumer.avro.SimpleAvroV2ListenerStub;
+import com.nacho.pulsar.demo.consumer.avro.object.SimpleAvroObjectListenerV2Stub;
+import com.nacho.pulsar.demo.consumer.avro.object.SimpleAvroObjectProducerV1Stub;
+import com.nacho.pulsar.demo.consumer.avro.object.SimpleAvroObjectProducerV2Stub;
 import com.nacho.pulsar.demo.consumer.bytearray.SimpleByteArrayListenerV2Stub;
 import com.nacho.pulsar.demo.consumer.bytearray.SimpleByteArrayProducerV1Stub;
 import com.nacho.pulsar.demo.consumer.bytearray.SimpleByteArrayProducerV2Stub;
@@ -13,12 +16,14 @@ import com.nacho.pulsar.demo.consumer.modes.KeySharedListenerStub;
 import com.nacho.pulsar.demo.consumer.modes.KeyedProducerStub;
 import com.nacho.pulsar.demo.consumer.modes.SharedListenerStub;
 import com.nacho.pulsar.demo.consumer.modes.SimpleProducerStub;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.pulsar.client.admin.PulsarAdmin;
 import org.apache.pulsar.client.admin.PulsarAdminException;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
-import org.junit.Ignore;
+import org.apache.pulsar.common.policies.data.SchemaCompatibilityStrategy;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PulsarContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -33,6 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.awaitility.Awaitility.await;
 
+@Slf4j
 @Testcontainers
 class TestCases {
 
@@ -49,9 +55,9 @@ class TestCases {
     PulsarAdmin pulsarAdmin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.getHttpServiceUrl()).build();
     for (String tenant : pulsarAdmin.tenants().getTenants()) {
       for (String namespace : pulsarAdmin.namespaces().getNamespaces(tenant)) {
+        log.info("Tenant: {}, namespace: {}", tenant, namespace);
         pulsarAdmin.namespaces().setIsAllowAutoUpdateSchema(namespace, true);
-//        pulsarAdmin.namespaces().setSchemaCompatibilityStrategy(namespace, SchemaCompatibilityStrategy.ALWAYS_COMPATIBLE);
-//        pulsarAdmin.namespaces().setSchemaValidationEnforced(namespace, false);
+        pulsarAdmin.namespaces().setSchemaCompatibilityStrategy(namespace, SchemaCompatibilityStrategy.FULL);
       }
     }
   }
@@ -245,9 +251,34 @@ class TestCases {
             .untilAsserted(() -> assertThat(listenerV2.consumedCount()).isEqualTo(1));
   }
 
+
+  @Test
+  @Disabled
+    // couldn't make it work so far
+  void produceAndConsumeAvroObjectDifferentVersion() throws Exception {
+    // given
+    final String topic = "produceAndConsumeAvroObjectDifferentVersion";
+    final SimpleAvroObjectProducerV1Stub producerV1 = new SimpleAvroObjectProducerV1Stub(pulsarClient, topic);
+    final SimpleAvroObjectProducerV2Stub producerV2 = new SimpleAvroObjectProducerV2Stub(pulsarClient, topic);
+    final SimpleAvroObjectListenerV2Stub listenerV2 = new SimpleAvroObjectListenerV2Stub(pulsarClient, topic, "subscription-produceAndConsumeAvroObjectDifferentVersion");
+    listenerV2.startListening();
+
+    // when
+    producerV1.produce("userV1");
+    producerV2.produce("userV2");
+
+    // then
+    await() //
+            .pollDelay(Duration.ofSeconds(1L))//
+            .atMost(Duration.ofSeconds(10)) //
+            .pollInterval(Duration.ofMillis(100)) //
+            .untilAsserted(() -> assertThat(listenerV2.consumedCount()).isEqualTo(1));
+  }
+
+
   // There maybe don't make sense. We'll send the same schema but different fields. Here i'm sending different schemas
   @Test
-  @Ignore
+  @Disabled
   void produceAndConsumeByteArrayDifferentVersion() throws Exception {
     // given
     final String topic = "produceAndConsumeByteArrayDifferentVersion";
@@ -269,7 +300,7 @@ class TestCases {
   }
 
   @Test
-  @Ignore
+  @Disabled
   void produceAndConsumeAvroDifferentVersion() throws Exception {
     // given
     final String topic = "produceAndConsumeAvroDifferentVersion";

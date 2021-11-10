@@ -23,7 +23,7 @@ public class SimpleByteArrayProducerV1Stub {
 
   public void produce(String name) throws Exception {
     UserSchema user = UserSchema.newBuilder()
-            .setId(UUID.randomUUID())
+            .setId(UUID.randomUUID().toString())
             .setUserName(name)
             .build();
     try (var serializedUser = new ByteArrayOutputStream()) {

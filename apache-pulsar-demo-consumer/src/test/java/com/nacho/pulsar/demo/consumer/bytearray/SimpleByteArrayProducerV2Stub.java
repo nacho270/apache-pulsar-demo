@@ -23,7 +23,7 @@ public class SimpleByteArrayProducerV2Stub {
 
   public void produce(String name) throws Exception {
     UserSchemaV2 user = UserSchemaV2.newBuilder()
-            .setId(UUID.randomUUID())
+            .setId(UUID.randomUUID().toString())
             .setUserName(name)
             .setEmail(String.format("%s@%s", name, name))
             .build();

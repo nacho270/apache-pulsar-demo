@@ -11,6 +11,7 @@ import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.client.api.schema.SchemaDefinition;
 import org.apache.pulsar.client.impl.schema.AvroSchema;
 
 import java.util.concurrent.TimeUnit;
@@ -18,8 +19,8 @@ import java.util.concurrent.TimeUnit;
 @UtilityClass
 public class Utils {
 
-  public static Consumer<String> consumer(final PulsarClient pulsarClient, final String topic, final String subscription, final SubscriptionType subscriptionType)
-          throws PulsarClientException {
+  public static Consumer<String> consumer(final PulsarClient pulsarClient, final String topic, final String subscription,
+                                          final SubscriptionType subscriptionType) throws PulsarClientException {
     return pulsarClient //
             .newConsumer(Schema.STRING) //
             .topic(topic) //
@@ -58,7 +59,8 @@ public class Utils {
             .create();
   }
 
-  public static Consumer<UserSchemaV2> avroConsumerV2(final PulsarClient pulsarClient, final String topic, final String subscription, final SubscriptionType subscriptionType) throws PulsarClientException {
+  public static Consumer<UserSchemaV2> avroConsumerV2(final PulsarClient pulsarClient, final String topic,
+                                                      final String subscription, final SubscriptionType subscriptionType) throws PulsarClientException {
     return pulsarClient //
             .newConsumer(AvroSchema.of(UserSchemaV2.class)) //
             .topic(topic) //
@@ -71,6 +73,122 @@ public class Utils {
 
   /******************************************************************************************************************************************************************************************************************/
 
+  public static Producer<Object> objectProducerV1(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
+    SchemaDefinition<Object> schema = SchemaDefinition.builder().withJsonDef("""
+            {
+              "type": "record",
+              "name": "UserSchema",
+              "namespace": "com.nacho.pulsar.demo.schema",
+              "fields": [
+                {
+                  "name": "id",
+                  "type": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "userName",
+                  "type": {
+                    "type": "string"
+                  }
+                }
+              ]
+            }
+            """).build();
+
+    return pulsarClient //
+            .newProducer(Schema.AVRO(schema)) //
+            .topic(topic) //
+            .create();
+  }
+
+  public static Producer<Object> objectProducerV2(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
+    SchemaDefinition<Object> schema = SchemaDefinition.builder().withJsonDef("""
+            {
+              "type": "record",
+              "name": "UserSchema",
+              "namespace": "com.nacho.pulsar.demo.schema",
+              "fields": [
+                   {
+                     "name": "id",
+                     "type": {
+                       "type": "string"
+                     }
+                   },
+                   {
+                     "name": "userName",
+                     "type": {
+                       "type": "string"
+                     }
+                   },
+                   {
+                     "name": "email",
+                     "type": [
+                       "null",
+                       "string"
+                     ],
+                     "default": null
+                   }
+                 ]
+            }
+            """)
+            .withAlwaysAllowNull(true)
+            .withSupportSchemaVersioning(true)
+            .build();
+
+    return pulsarClient //
+            .newProducer(Schema.AVRO(schema)) //
+            .topic(topic) //
+            .create();
+  }
+
+  public static Consumer<Object> objectConsumerV2(final PulsarClient pulsarClient, final String topic,
+                                                  final String subscription, final SubscriptionType subscriptionType) throws PulsarClientException {
+    SchemaDefinition<Object> schema = SchemaDefinition.builder().withJsonDef("""
+            {
+              "type": "record",
+              "name": "UserSchema",
+              "namespace": "com.nacho.pulsar.demo.schema",
+              "fields": [
+                   {
+                     "name": "id",
+                     "type": {
+                       "type": "string"
+                     }
+                   },
+                   {
+                     "name": "userName",
+                     "type": {
+                       "type": "string"
+                     }
+                   },
+                   {
+                     "name": "email",
+                     "type": [
+                       "null",
+                       "string"
+                     ],
+                     "default": null
+                   }
+                 ]
+            }
+            """)
+            .withAlwaysAllowNull(true)
+            .withSupportSchemaVersioning(true)
+            .build();
+    return pulsarClient //
+            .newConsumer(Schema.AVRO(schema)) //
+            .topic(topic) //
+            .subscriptionName(subscription) //
+            .subscriptionInitialPosition(SubscriptionInitialPosition.Earliest) //
+            .subscriptionType(subscriptionType) //
+            .receiverQueueSize(10) //
+            .subscribe();
+  }
+
+
+  /******************************************************************************************************************************************************************************************************************/
+
   public static Producer<byte[]> byteProducer(final PulsarClient pulsarClient, final String topic) throws PulsarClientException {
     return pulsarClient //
             .newProducer() //
@@ -79,7 +197,8 @@ public class Utils {
   }
 
 
-  public static Consumer<byte[]> byteConsumer(final PulsarClient pulsarClient, final String topic, final String subscription, final SubscriptionType subscriptionType) throws PulsarClientException {
+  public static Consumer<byte[]> byteConsumer(final PulsarClient pulsarClient, final String topic, final String subscription,
+                                              final SubscriptionType subscriptionType) throws PulsarClientException {
     return pulsarClient //
             .newConsumer() //
             .topic(topic) //
@@ -100,7 +219,8 @@ public class Utils {
   }
 
 
-  public static <T> Consumer<T> jsonConsumer(final PulsarClient pulsarClient, final String topic, final String subscription, final SubscriptionType subscriptionType, Class<T> clazz) throws PulsarClientException {
+  public static <T> Consumer<T> jsonConsumer(final PulsarClient pulsarClient, final String topic, final String subscription,
+                                             final SubscriptionType subscriptionType, Class<T> clazz) throws PulsarClientException {
     return pulsarClient //
             .newConsumer(Schema.JSON(clazz)) //
             .topic(topic) //
